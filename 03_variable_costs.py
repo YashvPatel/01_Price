@@ -1,9 +1,5 @@
-# import libraries
 import pandas
-import math
 
-
-# Functions starts now
 
 def num_check(question, error, num_type):
     valid = False
@@ -19,24 +15,6 @@ def num_check(question, error, num_type):
 
         except ValueError:
             print(error)
-
-
-# Checks that the user has entered yes / no to a question
-def yes_no(question, to_check=None):
-    to_check - ["yes", "no"]
-
-    valid = False
-    while not valid:
-
-        response = input(question).lower()
-
-        for var_item in to_check:
-            if response == var_item:
-                return response
-            elif response == var_item[0]:
-                return var_item
-
-        print("Please enter either yes or no...\n")
 
 
 def not_blank(question, error):
@@ -55,12 +33,6 @@ def not_blank(question, error):
 def currency(x):
     return f"${x:.2f}"
     # return "${:.2f}".format(x)
-
-
-# Loops to make testing faster...
-for item in range(0, 6):
-    want_help = yes_no("Do want to read the instructions? ")
-    print("You said '{}'\n".format(want_help))
 
 
 # Gets expenses, returns list wish has the data frame and sub-total
