@@ -135,32 +135,8 @@ def expense_print(heading, frame, subtotal):
     return ""
 
 
-# Asking for kgs or grams
-def yes_no(question, to_check=None):
-    to_check = ["yes", "no"]
-
-    valid = False
-    while not valid:
-
-        response = input(question).lower()
-
-        for var_item in to_check:
-            if response == var_item:
-                return response
-            elif response == var_item[0]:
-                return var_item
-
-        print("Please enter either yes or no...\n")
-
-
 # *** Main routine starts here ***
 yes_no_list = ['yes', 'no']
-
-# Get product name
-product_name = not_blank("Product name: ", "The product name can")
-
-print()
-print("Please enter your weight below...")
 
 
 # Ask user for profit goal
@@ -231,6 +207,12 @@ def profit_goal(total_costs):
 
 profit_target = profit_goal(100)
 print(profit_target)
+
+# Get product name
+product_name = not_blank("Product name: ", "The product name can")
+
+print()
+print("Please enter your weight below...")
 
 variable_expenses = get_expenses("variable")
 variable_frame = variable_expenses[0]
