@@ -138,6 +138,9 @@ def expense_print(heading, frame, subtotal):
 # *** Main routine starts here ***
 yes_no_list = ['yes', 'no']
 
+print()
+print("Please enter your weight below...")
+
 
 # Ask user for profit goal
 def profit_goal(total_costs):
@@ -210,9 +213,6 @@ print(profit_target)
 
 # Get product name
 product_name = not_blank("Product name: ", "The product name can")
-
-print()
-print("Please enter your weight below...")
 
 variable_expenses = get_expenses("variable")
 variable_frame = variable_expenses[0]
