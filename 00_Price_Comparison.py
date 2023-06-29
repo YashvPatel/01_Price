@@ -1,10 +1,21 @@
-# import libraries
 import pandas
-import math
 
 
-# Functions starts now
+# checks that a response is not blank
+def not_blank(question, error):
+    valid = False
+    while not valid:
+        response = input(question)
 
+        if response == "":
+            print("{}. \nPlease try again.\n".format(error))
+            continue
+
+        return response
+
+
+# checks users enter a number that is more than zero.
+# Can be used to check for integers or floats
 def num_check(question, error, num_type):
     valid = False
     while not valid:
@@ -20,112 +31,151 @@ def num_check(question, error, num_type):
         except ValueError:
             print(error)
 
-
-# Checks that the user has entered yes / no to a question
-def yes_no(question, to_check=None):
-    to_check - ["yes", "no"]
-
-    valid = False
-    while not valid:
-
-        response = input(question).lower()
-
-        for var_item in to_check:
-            if response == var_item:
-                return response
-            elif response == var_item[0]:
-                return var_item
-
-        print("Please enter either yes or no...\n")
+            # Main routine goes here
 
 
-def not_blank(question, error):
-    valid = False
-    while not valid:
+# yes / no checker, (simple)
+def yes_no(question):
+    while True:
         response = input(question)
 
-        if response == "":
-            print("{}. \n Please try again. \n".format(error))
-            continue
+        if response == "yes" or response == "y":
+            return "yes"
+        elif response == "no" or response == "n":
+            return "no"
+        else:
+            print("Please enter either yes or no...\n")
 
-        return response
+
+# main routine goes here
+want_instructions = yes_no("Want me to display the Rice List, comparing prices in grams? ")
+
+if want_instructions == "yes":
+    instructions = ["+*+*+ Rice Price Comparison +*+*+", "", "{-=-= Rice Costs in Kgs & Grams =-=-=-}",
+                    "  _________     _____   ___   _____   ______",
+                    "_|Rice type|_  |Grams| |kgs| |Price| |Per kg|", "Arborio Rice]  |1000g| |1.0| |$1.00| |$1.00|",
+                    "White Rice]    |3500g| |3.5| |$4.50| |$1.28|",
+                    "Brown Rice]    |5000g| |5.0| |$3.50| |$7.00| ", "Bomba Rice]    |3000g| |3.0| |$2.00| |$1.50|",
+                    "Jasmine Rice]  |5500g| |5.5| |$4.00| |$0.72|", " ________________________________________",
+                    "[Recommendation: Jasmine Rice, $0.72 / kg]", "(ie: $1.44 for 2kg)"]
+    print("List:")
+    for step in instructions:
+        print(step)
+
+print("you may continue")
+print()
 
 
-# currency formatting
+# currency formatting function
 def currency(x):
-    return f"${x:.2f}"
-    # return "${:.2f}".format(x)
+    return "${:.2f}".format(x)
 
 
-# Loops to make testing faster...
-for item in range(0, 6):
-    want_help = yes_no("Do want to read the instructions? ")
-    print("You said '{}'\n".format(want_help))
-
-
-# Gets expenses, returns list wish has the data frame and sub-total
+# Gets expense, returns list which has
+# the data frame and subtotal
 def get_expenses(var_fixed):
     # Set up dictionaries and lists
-
     item_list = []
     quantity_list = []
     price_list = []
 
     variable_dict = {
-        "Item": item_list,
+        "item": item_list,
         "Quantity": quantity_list,
         "Price": price_list
-
     }
 
-    # loop to get component, quantity and price
-    item_name = ""
+    while True:
+        budget = input("Enter your budget: ")
+        try:
+            budget = float(budget)
+            if budget < 2.99:
+                print("")
+            else:
+                break
 
-    while item_name.lower() != "xxx":
+        except ValueError:
+            print("Please enter a valid weight.")
 
-        print()
-        # get name, quantity and item
-        item_name = not_blank("Item name: ",
-                              "The component name can't be blank.")
+    # Loop to get component, quantity, and price
+    while True:
+        item_name = input("Item name (enter 'xxx' to print list): ")
 
         if item_name.lower() == "xxx":
             break
 
-        quantity = num_check("Quantity:", "The amount must be a whole number which is more than zero", int)
+        if var_fixed == "variable":
+            quantity = num_check("Kgs: ", "The amount must be a whole number which is more than zero", float)
+        else:
+            quantity = 0.1
+
         price = num_check("How much for a single item? $", "The price must be a number <more than 0>", float)
 
-        # add item, quantity and price to lists
+        # Add item, quantity, and price to lists
         item_list.append(item_name)
         quantity_list.append(quantity)
         price_list.append(price)
 
-        expense_frame = pandas.DataFrame(variable_dict)
-        expense_frame = expense_frame.set_index('Item')
+    expense_frame = pandas.DataFrame(variable_dict)
+    expense_frame = expense_frame.set_index('item')
 
-        expense_frame['Cost'] = expense_frame['Quantity'] * expense_frame['Price']
-        # Find sub-total
-        expense_sub = expense_frame['Cost'].sum()
+    expense_frame['Cost'] = expense_frame['Quantity'] * expense_frame['Price']
+    expense_sub = expense_frame['Cost'].sum()
 
-        add_dollars = ['Price', 'Cost']
-        for item in add_dollars:
-            expense_frame[item] = expense_frame[item].apply(currency)
+    add_dollars = ['Price', 'Cost']
+    for item in add_dollars:
+        expense_frame[item] = expense_frame[item].apply(currency)
 
-        return [expense_frame, expense_sub]
+    return [expense_frame, expense_sub]
 
 
-# **** Main routine begins ****
+# Prints expense frames
+def expense_print(heading, frame, subtotal):
+    print()
+    print("**** {} Costs ****".format(heading))
+    print(frame)
+    print()
+    print("{} Costs: ${:.2f}".format(heading, subtotal))
+    return ""
+
+
+# *** Main routine starts here ***
+yes_no_list = ['yes', 'no']
+
+print()
+print("Please enter your weight below...")
+
+# Ask user for weight
+while True:
+    try:
+        # Ask user for weight
+        weight = float(input("Enter your weight in (Grams): "))
+        unit = input("Type (G) to begin converting: ")
+
+        if unit == "G":
+            weight = weight * 0.001
+            unit = "Kgs."
+            print(f"Your weight is: {round(weight, 1)} {unit}")
+            break
+        else:
+            print(f"{unit} was not valid")
+
+    except ValueError:
+        print("Please enter a valid weight.")
 
 # Get product name
-product_name = not_blank("Product name: ", "The product name can't be blank.")
+product_name = not_blank("Product name: ", "The product name can")
 
 variable_expenses = get_expenses("variable")
 variable_frame = variable_expenses[0]
 variable_sub = variable_expenses[1]
 
-# **** Printing Area ****
+# Write data to file
 
-print()
-print(variable_frame)
-print()
+# *** Printing Area ****
 
-print("Variable Costs: ${:.2f}".format(variable_sub))
+# Find Total Costs
+print()
+print("**** Rice Comparison Tool - {} *****".format(product_name))
+print()
+expense_print("Rice Total", variable_frame, variable_sub)
