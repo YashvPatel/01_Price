@@ -31,26 +31,16 @@ def num_check(question, error, num_type):
         except ValueError:
             print(error)
 
-            # Main routine goes here
+
+# Main routine goes here
+
+# Currency formatting function
+def currency(x):
+    return "${:.2f}".format(x)
 
 
-# yes / no checker, (simple)
-def yes_no(question):
-    while True:
-        response = input(question)
-
-        if response == "yes" or response == "y":
-            return "yes"
-        elif response == "no" or response == "n":
-            return "no"
-        else:
-            print("Please enter either yes or no...\n")
-
-
-# main routine goes here
-want_instructions = yes_no("Want me to display the Rice List, comparing prices in grams? ")
-
-if want_instructions == "yes":
+# Instructions go here
+def display_instructions():
     instructions = ["+*+*+ Rice Price Comparison +*+*+", "", "{-=-= Rice Costs in Kgs & Grams =-=-=-}",
                     "  _________     _____   ___   _____   ______",
                     "_|Rice type|_  |Grams| |kgs| |Price| |Per kg|", "Arborio Rice]  |1000g| |1.0| |$1.00| |$1.00|",
@@ -58,21 +48,26 @@ if want_instructions == "yes":
                     "Brown Rice]    |5000g| |5.0| |$3.50| |$7.00| ", "Bomba Rice]    |3000g| |3.0| |$2.00| |$1.50|",
                     "Jasmine Rice]  |5500g| |5.5| |$4.00| |$0.72|", " ________________________________________",
                     "[Recommendation: Jasmine Rice, $0.72 / kg]", "(ie: $1.44 for 2kg)"]
+
     print("List:")
     for step in instructions:
         print(step)
 
-print("you may continue")
-print()
+
+# Yes / No checker
+def yes_no(question):
+    while True:
+        response = input(question)
+
+        if response == "yes" or response == "y":
+            return True
+        elif response == "no" or response == "n":
+            return False
+        else:
+            print("Please enter either yes or no...\n")
 
 
-# currency formatting function
-def currency(x):
-    return "${:.2f}".format(x)
-
-
-# Gets expense, returns list which has
-# the data frame and subtotal
+# Gets expense, returns list which has the data frame and subtotal
 def get_expenses(var_fixed):
     # Set up dictionaries and lists
     item_list = []
@@ -84,18 +79,6 @@ def get_expenses(var_fixed):
         "Quantity": quantity_list,
         "Price": price_list
     }
-
-    while True:
-        budget = input("Enter your budget: ")
-        try:
-            budget = float(budget)
-            if budget < 2.99:
-                print("")
-            else:
-                break
-
-        except ValueError:
-            print("Please enter a valid weight.")
 
     # Loop to get component, quantity, and price
     while True:
@@ -140,7 +123,6 @@ def expense_print(heading, frame, subtotal):
 
 
 # *** Main routine starts here ***
-yes_no_list = ['yes', 'no']
 
 print()
 print("Please enter your weight below...")
@@ -164,11 +146,25 @@ while True:
         print("Please enter a valid weight.")
 
 # Get product name
-product_name = not_blank("Product name: ", "The product name can")
+product_name = not_blank("Product name: ", "The product name can't be blank")
+
+# Display instructions
+want_instructions = yes_no("Want me to display the Rice List, comparing prices in grams? ")
+
+if want_instructions:
+    display_instructions()
+
+print("You may continue.\n")
 
 variable_expenses = get_expenses("variable")
 variable_frame = variable_expenses[0]
 variable_sub = variable_expenses[1]
+
+# Ask user for budget
+budget = num_check("Enter your budget: $", "The budget must be a number > 0", float)
+
+# Calculate whether budget is over the cost
+is_over_budget = variable_sub > budget
 
 # Write data to file
 
@@ -179,3 +175,9 @@ print()
 print("**** Rice Comparison Tool - {} *****".format(product_name))
 print()
 expense_print("Rice Total", variable_frame, variable_sub)
+
+# Check if budget is over the cost
+if is_over_budget:
+    print("\nYour budget is over the cost.")
+else:
+    print("\nYour budget is within the cost.")
