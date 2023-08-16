@@ -33,6 +33,18 @@ def num_check(question, error, num_type):
 
 
 # Main routine goes here
+# yes / no checker, (simple)
+def yes_no(question):
+    while True:
+        response = input(question)
+
+        if response == "yes" or response == "y":
+            return "yes"
+        elif response == "no" or response == "n":
+            return "no"
+        else:
+            print("Please enter either yes or no...\n")
+
 
 # Currency formatting function
 def currency(x):
@@ -54,18 +66,20 @@ def display_instructions():
         print(step)
 
 
-# Yes / No checker
-def yes_no(question):
-    while True:
-        response = input(question)
+# instructions go here
+want_explanation = yes_no("Do you need instructions?: ")
 
-        if response == "yes" or response == "y":
-            return True
-        elif response == "no" or response == "n":
-            return False
-        else:
-            print("Please enter either yes or no...\n")
+if want_explanation == "yes":
+    explanation = ["A thorough explanation of this program is to compare and contrast",
+                   "different type of rices in cost & kgs to best match your preferred",
+                   "type of rice",
+                   ""]
+    print("")
+    for step in explanation:
+        print(step)
 
+print("you may continue")
+print()
 
 # Display instructions
 want_instructions = yes_no("Want me to display the Rice List, comparing prices in grams? ")
