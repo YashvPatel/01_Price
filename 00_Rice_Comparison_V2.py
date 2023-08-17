@@ -8,7 +8,7 @@ def not_blank(question):
         if response != "":
             return response
         else:
-            print("This plank no")
+            print("This cant be blank")
             print()
 
 
@@ -82,7 +82,7 @@ budget = num_check("Enter your budget: $", "The budget must be a number > 0", fl
 
 
 # Gets expense, returns list which has the data frame and subtotal
-def get_expenses(var_fixed, budget):
+def get_cost(var_fixed, budget):
     # Set up dictionaries and lists
     item_list = []
     quantity_list = []
@@ -162,13 +162,10 @@ def expense_print(heading, frame, subtotal):
 
 # *** Main routine starts here ***
 
-print()
-print("Please enter your weight below...")
-
 # Get product name
 product_name = not_blank("Product name: ")
 
-variable_expenses = get_expenses("variable", budget)
+variable_expenses = get_cost("variable", budget)
 variable_frame = variable_expenses[0]
 variable_sub = variable_expenses[1]
 
@@ -185,7 +182,6 @@ cheapest_rice_cost_per_kg = cheapest_rice_row['Price'].values[0]
 # Find Total Costs
 print()
 print("**** Rice Comparison Tool - {} *****".format(product_name))
-print()
 expense_print("Rice Total", variable_frame, variable_sub)
 
 # Check if budget is over the cost
@@ -199,6 +195,3 @@ else:
 # Print cheapest rice and recommend information
 print(
     "\nThe cheapest rice is '{}' with a cost of {} per kg.".format(cheapest_rice_name, cheapest_rice_cost_per_kg))
-
-print()
-print("However we recommend Bomba rice $0.67/kg which is our cheapest product")
