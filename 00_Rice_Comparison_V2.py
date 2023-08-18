@@ -50,18 +50,18 @@ def currency(x):
 
 
 # instructions go here
-want_instructions = yes_no("Do you need the Rice Price Comparison list?: ")
+want_list = yes_no("Do you need the Rice Price Comparison list?: ")
 
-if want_instructions == "yes":
-    instructions = ["+*+*+ Rice Price Comparison +*+*+", "", "{-=-= Rice Costs in Kgs & Grams =-=-=-}",
-                    "  _________     _____   ___   _____   ______",
-                    "_|Rice type|_  |Grams| |kgs| |Price| |Per kg|", "Arborio Rice]  |1000g| |1.0| |$1.00| |$1.00|",
-                    "White Rice]    |3500g| |3.5| |$4.50| |$1.28|",
-                    "Brown Rice]    |5000g| |5.0| |$3.50| |$7.00| ", "Bomba Rice]    |3000g| |3.0| |$2.00| |$0.67|",
-                    "Jasmine Rice]  |5500g| |5.5| |$4.00| |$0.73|", " ________________________________________",
-                    "[Recommendation: Bomba Rice, $0.67 / kg]", "(ie: $1.34 for 2kg)", ""]
+if want_list == "yes":
+    want_list = ["+*+*+ Rice Price Comparison +*+*+", "", "{-=-= Rice Costs in Kgs & Grams =-=-=-}",
+                 "  _________     _____   ___   _____   ______",
+                 "_|Rice type|_  |Grams| |kgs| |Price| |Per kg|", "Arborio Rice]  |1000g| |1.0| |$1.00| |$1.00|",
+                 "White Rice]    |3500g| |3.5| |$4.50| |$1.28|",
+                 "Brown Rice]    |5000g| |5.0| |$3.50| |$7.00| ", "Bomba Rice]    |3000g| |3.0| |$2.00| |$0.67|",
+                 "Jasmine Rice]  |5500g| |5.5| |$4.00| |$0.73|", " ________________________________________",
+                 "[Recommendation: Bomba Rice, $0.67 / kg]", "(ie: $1.34 for 2kg)", ""]
     print("List:")
-    for step in instructions:
+    for step in want_list:
         print(step)
 
 # instructions go here
@@ -106,6 +106,12 @@ def get_cost(var_fixed, budget):
             try:
                 # Ask user for weight
                 weight = float(input("Enter your weight in (Grams): "))
+
+                # Check if weight is below 100 grams
+                if weight < 100:
+                    print("Weight cannot be below 100 grams. Please enter a valid weight.")
+                    continue  # Restart the loop if weight is below 100 grams
+
                 unit = input("Type (G) to begin converting: ")
 
                 if unit == "G":
