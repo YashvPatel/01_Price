@@ -50,21 +50,6 @@ def currency(x):
 
 
 # instructions go here
-want_list = yes_no("Do you need the Rice Price Comparison list?: ")
-
-if want_list == "yes":
-    want_list = ["+*+*+ Rice Price Comparison +*+*+", "", "{-=-= Rice Costs in Kgs & Grams =-=-=-}",
-                 "  _________     _____   ___   _____   ______",
-                 "_|Rice type|_  |Grams| |kgs| |Price| |Per kg|", "Arborio Rice]  |1000g| |1.0| |$1.00| |$1.00|",
-                 "White Rice]    |3500g| |3.5| |$4.50| |$1.28|",
-                 "Brown Rice]    |5000g| |5.0| |$3.50| |$7.00| ", "Bomba Rice]    |3000g| |3.0| |$2.00| |$0.67|",
-                 "Jasmine Rice]  |5500g| |5.5| |$4.00| |$0.73|", " ________________________________________",
-                 "[Recommendation: Bomba Rice, $0.67 / kg]", "(ie: $1.34 for 2kg)", ""]
-    print("List:")
-    for step in want_list:
-        print(step)
-
-# instructions go here
 want_explanation = yes_no("Do you need an explanation of this program?: ")
 
 if want_explanation == "yes":
@@ -84,6 +69,7 @@ budget = num_check("Enter your budget: $", "The budget must be a number > 0", fl
 # Gets expense, returns list which has the data frame and subtotal
 def get_cost(var_fixed, budget):
     # Set up dictionaries and lists
+    global weight_kg
     item_list = []
     quantity_list = []
     price_list = []
@@ -101,38 +87,32 @@ def get_cost(var_fixed, budget):
         if item_name.lower() == "xxx":
             break
 
-        # Ask user for weight in grams
         while True:
             try:
-                # Ask user for weight
-                weight = float(input("Enter your weight in (Grams): "))
+                weight = float(input("Enter the weight in grams: "))
+                if weight < 1000:
+                    print("Weight cannot be below 1000 grams. Please enter a valid weight.")
+                    continue
 
-                # Check if weight is below 100 grams
-                if weight < 100:
-                    print("Weight cannot be below 100 grams. Please enter a valid weight.")
-                    continue  # Restart the loop if weight is below 100 grams
-
-                unit = input("Type (G) to begin converting: ")
-
-                if unit == "G":
-                    weight = weight * 0.001
-                    unit = "Kgs."
-                    print(f"Your weight is: {round(weight, 1)} {unit}")
-                    break
-                else:
-                    print(f"{unit} was not valid")
+                # Automatically convert weight to kilograms
+                weight_kg = weight * 0.001
+                print(f"Weight: {round(weight_kg, 1)} Kgs")
+                break
 
             except ValueError:
                 print("Please enter a valid weight.")
 
         if var_fixed == "variable":
-            quantity = num_check("Kgs: ", "The amount must be a whole number which is more than zero", float)
+            # Use the weight in kilograms for calculation
+            quantity = weight_kg  # Use the converted weight in kilograms as the quantity
         else:
             quantity = 0.1
 
-        # Check if adding the item exceeds the budget
+            # Check if adding the item exceeds the budget
         price = num_check("How much for a single item? $", "The price must be a number > 0", float)
 
+        # Calculate the cost based on weight in kilograms
+        item_cost = quantity * price  # This line calculates the cost using weight in kilograms
         item_cost = quantity * price
         if (subtotal + item_cost) <= budget:
             # Add item, quantity, and price to lists
@@ -187,8 +167,8 @@ cheapest_rice_cost_per_kg = cheapest_rice_row['Price'].values[0]
 
 # Find Total Costs
 print()
-print("**** Rice Comparison Tool - {} *****".format(product_name))
-expense_print("Rice Total", variable_frame, variable_sub)
+print("**** Price Comparison Tool - {} *****".format(product_name))
+expense_print("Product Total", variable_frame, variable_sub)
 
 # Check if budget is over the cost
 if variable_sub > budget:
@@ -200,4 +180,4 @@ else:
 
 # Print cheapest rice and recommend information
 print(
-    "\nThe cheapest rice is '{}' with a cost of {} per kg.".format(cheapest_rice_name, cheapest_rice_cost_per_kg))
+    "\nThe cheapest Product is '{}' with a cost of {} per kg.".format(cheapest_rice_name, cheapest_rice_cost_per_kg))
